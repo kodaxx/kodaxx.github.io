@@ -86,7 +86,7 @@ body {
   -ms-user-select: none;
   user-select: none;
 
-  opacity: 0.9;
+  opacity: 100%;
   border: 1px solid #000;
   border-radius: 50%;
   background: #fff;
