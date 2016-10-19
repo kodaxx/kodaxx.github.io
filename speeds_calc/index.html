@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Speeds &amp; Feeds Calculator</title>
+    <link rel="stylesheet" href="/css/jquery.mobile-1.4.5.min.css">
+    <!-- <link rel="stylesheet" href="/js/jqm-demos.css"> -->
+    <script src="/js/jquery.js"></script>
+    <script src="/js/calc.js"></script>
+    <script src="/js/functions.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Start of first page: #one -->
+    <div data-role="page" id="one">
+
+        <div data-role="header">
+            <h1>Speeds &amp; Feeds</h1>
+        </div>
+        <!-- /header -->
+
+        <div role="main" class="ui-content">
+            <h2>Material &amp; Tool Info</h2>
+            <br>
+            <label>Select an Operation:
+                <select name="operation" id="operation">
+                    <option value="face">Face Milling</option>
+                    <option value="slab">Slab/Side Milling</option>
+                    <option value="end">End Milling</option>
+                    <option value="turning">Turning</option>
+                    <option value="boring">Boring</option>
+                    <option value="drilling">Drilling</option>
+                    <option value="reaming">Reaming</option>
+                    <option value="counter">Counter-Boring</option>
+                </select>
+            </label>
+
+            <fieldset data-role="controlgroup" data-type="horizontal">
+            
+                <legend>Tool Type:</legend>
+            
+                <input type="radio" name="tool" id="hssChoice" value="hss">
+                <label for="hssChoice">H.S.S.</label>
+            
+                <input type="radio" name="tool" id="carbideChoice" value="carbide" checked="checked">
+                <label for="carbideChoice">Carbide</label>
+                </fieldset>
+
+            <label>Select a Material:
+                <select name="material" id="material">
+                    <option value="aluminum">Aluminum</option>
+                    <option value="brass">Brass</option>
+                    <option value="bronze">Bronze</option>
+                    <option value="bronzeHard">Bronze (Hard)</option>
+                    <option value="castSoft">Cast Iron (Soft)</option>
+                    <option value="castHard">Cast Iron (Hard)</option>
+                    <option value="castChilled">Cast Iron (Chilled)</option>
+                    <option value="mallIron">Malleable Iron</option>
+                    <option value="steelSoft">Steel (Soft)</option>
+                    <option value="steelMedium">Steel (Medium)</option>
+                    <option value="steelHard">Steel (Hard)</option>
+                </select>
+            </label>
+
+            <label for="teethSlider">Number of Teeth:</label>
+        
+            <input type="range" name="teeth" id="teethSlider" min="1" max="10" value="1">
+
+            <label for="diameterSelect">Diameter of Workpiece/Cutter:</label>
+            <input type="number" name="diameter" pattern="[0-9]*" id="diameterSelect" value=".5" step=".00001">
+
+            <p><a id="rangeButton" href="#two" class="ui-btn ui-shadow ui-corner-all">Calculate Range</a></p>
+        </div>
+        <!-- /content -->
+
+        <div data-role="footer" data-theme="a">
+            <h4>Made by Spencer Kuzara</h4>
+        </div>
+        <!-- /footer -->
+    </div>
+    <!-- /page one -->
+
+    <!-- Start of second page: #two -->
+    <div data-role="page" id="two" data-theme="a">
+
+        <div data-role="header">
+            <h1>Speeds &amp; Feeds</h1>
+        </div>
+        <!-- /header -->
+
+        <div role="main" class="ui-content">
+            <h2>RPM Range</h2>
+            <div id="rpmRangeDiv">
+            </div>
+
+            <label for="RPMSlider">RPM Range:</label>
+        
+            <input type="range" name="rpm" id="RPMSlider" min="1" max="10" value="1">
+
+            <p><a id="finalResults" href="#three" class="ui-btn ui-shadow ui-corner-all">Calculate</a></p>
+            <p><a href="#one" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Back</a></p>
+
+        </div>
+        <!-- /content -->
+
+        <div data-role="footer">
+            <h4>Made by Spencer Kuzara</h4>
+        </div>
+        <!-- /footer -->
+    </div>
+    <!-- /page two -->
+
+    <!-- Start of third page: #popup -->
+    <div data-role="page" id="three" data-theme="a">
+
+        <div data-role="header">
+            <h1>Speeds &amp; Feeds</h1>
+        </div>
+        <!-- /header -->
+
+        <div role="main" class="ui-content">
+            <h2>Feed Rate</h2>
+            <div id="feedRateDiv">
+            </div>
+            <div class="ui-corner-all custom-corners">
+            
+                <div class="ui-bar ui-bar-a">
+                
+                    <h3>Note:</h3>
+                </div>
+            
+                <div class="ui-body ui-body-a">
+                
+                    <p>Low rate is the starting feed for best finish.
+                        <br> Use middle of feed range as the starting feed for roughing.
+                        <br> High rate is the maximum feed for roughing.</p>
+                    </div>
+            </div>
+            <p><a href="#one" id="clearButton" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all">Start Over</a></p>
+            <p><a href="#two" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Back</a></p>
+
+        </div>
+        <!-- /content -->
+
+        <div data-role="footer">
+            <h4>Made by Spencer Kuzara</h4>
+        </div>
+        <!-- /footer -->
+    </div>
+    <!-- /page two -->
+    <script>
+        $("#rangeButton").click(function() {
+            var operation = $("#operation").val();
+            var operationText = $("#operation option:selected").text();
+            var material = $("#material").val();
+            var materialText = $("#material option:selected").text();
+            var tool = $("input:radio[name ='tool']:checked").val();
+            var toolID = $("input:radio[name ='tool']:checked");
+            var toolText = $('label[for=' + toolID.attr('id') + ']').text();
+            var diameter = $("#diameterSelect").val();
+            var teeth = $("#teethSlider").val();
+
+            var sfpm = surfaceSpeed(operation, material);
+
+            var hssLow = sfpm.hss[0];
+            var hssHigh = sfpm.hss[1];
+            var carbideLow = sfpm.carbide[0];
+            var carbideHigh = sfpm.carbide[1];
+
+            if (tool == "carbide") {
+                var rpmRange = RPM(carbideLow, carbideHigh, diameter);
+                var rpmLow = rpmRange.rpmLow;
+                var rpmHigh = rpmRange.rpmHigh;
+            } else if (tool == "hss") {
+                var rpmRange = RPM(hssLow, hssHigh, diameter);
+                var rpmLow = rpmRange.rpmLow;
+                var rpmHigh = rpmRange.rpmHigh;
+            }
+
+            console.log(sfpm);
+            console.log(diameter);
+            console.log(tool);
+            console.log(material);
+            console.log(teeth);
+            console.log(rpmRange);
+
+            $("#rpmRangeDiv").html("<p>For <strong>" + operationText + "</strong> your <strong>" + materialText + " </strong> material with a <strong>" + toolText + "</strong> tool, we recommend an RPM range of:</p><div class='ui-corner-all custom-corners'><div class='ui-bar ui-bar-a'><h3>RPM Range</h3></div><div class='ui-body ui-body-a'><p><strong>" + rpmLow + "</strong> RPM - <strong>" + rpmHigh + "</strong> RPM</p></div></div><p></p><p>To calculate <strong>Feed Rate</strong> select a specific RPM from the range below.</p>");
+
+            $('#RPMSlider').attr('min', rpmLow);
+            $('#RPMSlider').attr('max', rpmHigh);
+            $('#RPMSlider').attr('value', rpmLow);
+
+        });
+
+        $("#finalResults").click(function() {
+            var operation = $("#operation").val();
+            var operationText = $("#operation option:selected").text();
+            var material = $("#material").val();
+            var materialText = $("#material option:selected").text();
+            var tool = $("input:radio[name ='tool']:checked").val();
+            var toolID = $("input:radio[name ='tool']:checked");
+            var toolText = $('label[for=' + toolID.attr('id') + ']').text();
+            var diameter = $("#diameterSelect").val();
+            var teeth = $("#teethSlider").val();
+            var rpm = $("#RPMSlider").val();
+
+            var feedRateCalc = feedRate(operation, material, diameter);
+
+            var hssFeedRateLow = feedRateCalc.hss[0];
+            var hssFeedRateHigh = feedRateCalc.hss[1];
+            var carbideFeedRateLow = feedRateCalc.carbide[0];
+            var carbideFeedRateHigh = feedRateCalc.carbide[1];
+
+            if (tool == "carbide") {
+                var frpiLow = (carbideFeedRateLow * teeth) * rpm;
+                var frpiHigh = (carbideFeedRateHigh * teeth) * rpm;
+                console.log(frpiLow + " " + frpiHigh);
+            } else if (tool == "hss") {
+                var frpiLow = (hssFeedRateLow * rpm) * teeth;
+                var frpiHigh = (hssFeedRateHigh * rpm) * teeth;
+                console.log(frpiLow + " " + frpiHigh);
+            }
+
+            $("#feedRateDiv").html("<p>At the speed of <strong>" + rpm + "</strong> RPM</strong>, we recommend a <strong>Feed Rate</strong> between <strong>" + frpiLow.toFixed(3) + "</strong> and <strong>" + frpiHigh.toFixed(3) + "</strong> in. per min.</p>");
+
+        });
+        
+    </script>
+
+</body>
+
+</html>
