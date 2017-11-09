@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Speeds &amp; Feeds Calculator</title>
-    <link rel="stylesheet" href="/css/jquery.mobile-1.4.5.min.css">
-    <!-- <link rel="stylesheet" href="/js/jqm-demos.css"> -->
-    <script src="/projects/speedmate/js/jquery.js"></script>
-    <script src="/projects/speedmate/js/calc.js"></script>
-    <script src="/projects/speedmate/js/functions.js"></script>
-    <script src="/projects/speedmate/js/index.js"></script>
-    <script src="/projects/speedmate/js/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <!-- <link rel="stylesheet" href="/demos/speed_calc/js/jqm-demos.css"> -->
+    <script src="js/jquery.js"></script>
+    <script src="js/calc.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
 </head>
 
 <body>
@@ -166,6 +166,7 @@
             var teeth = $("#teethSlider").val();
 
             var sfpm = surfaceSpeed(operation, material);
+            console.log(sfpm);
 
             var hssLow = sfpm.hss[0];
             var hssHigh = sfpm.hss[1];
