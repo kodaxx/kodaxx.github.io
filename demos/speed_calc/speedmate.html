@@ -12,6 +12,11 @@
     <script src="js/functions.js"></script>
     <script src="js/index.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="img/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="img/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="img/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="img/apple-icon-144x144.png" />
 </head>
 
 <body>
@@ -49,7 +54,7 @@
 
                 <input type="radio" name="tool" id="carbideChoice" value="carbide" checked="checked">
                 <label for="carbideChoice">Carbide</label>
-                </fieldset>
+            </fieldset>
 
             <label>Select a Material:
                 <select name="material" id="material">
@@ -139,7 +144,7 @@
                     <p>Low rate is the starting feed for best finish.
                         <br> Use middle of feed range as the starting feed for roughing.
                         <br> High rate is the maximum feed for roughing.</p>
-                    </div>
+                </div>
             </div>
             <p><a href="#one" id="clearButton" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all">Start Over</a></p>
             <p><a href="#two" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Back</a></p>
@@ -230,7 +235,6 @@
             $("#feedRateDiv").html("<p>At the speed of <strong>" + rpm + "</strong> RPM</strong>, we recommend a <strong>Feed Rate</strong> between <strong>" + frpiLow.toFixed(3) + "</strong> and <strong>" + frpiHigh.toFixed(3) + "</strong> in. per min.</p>");
 
         });
-
     </script>
 
 </body>
