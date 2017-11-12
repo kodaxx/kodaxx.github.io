@@ -214,7 +214,7 @@
             var tool = $("input:radio[name ='tool']:checked").val();
             var toolID = $("input:radio[name ='tool']:checked");
             var toolText = $('label[for=' + toolID.attr('id') + ']').text();
-            var diameter = $("#diameterSelect").val();
+            var diameter = eval($("#diameterSelect").val());
             var teeth = $("#teethSlider").val();
             var rpm = $("#RPMSlider").val();
 
