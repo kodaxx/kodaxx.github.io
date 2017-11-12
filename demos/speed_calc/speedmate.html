@@ -80,7 +80,7 @@
             <input type="range" name="teeth" id="teethSlider" min="1" max="10" value="1">
 
             <label for="diameterSelect">Diameter of Workpiece/Cutter:</label>
-            <input type="number" name="diameter" pattern="[0-9]*" id="diameterSelect" value=".5" step=".00001">
+            <input name="diameter" id="diameterSelect">
 
             <p><a id="rangeButton" href="#two" class="ui-btn ui-shadow ui-corner-all">Calculate Range</a></p>
         </div>
@@ -170,7 +170,7 @@
             var tool = $("input:radio[name ='tool']:checked").val();
             var toolID = $("input:radio[name ='tool']:checked");
             var toolText = $('label[for=' + toolID.attr('id') + ']').text();
-            var diameter = $("#diameterSelect").val();
+            var diameter = eval($("#diameterSelect").val());
             var teeth = $("#teethSlider").val();
 
             var sfpm = surfaceSpeed(operation, material);
