@@ -176,16 +176,15 @@
             var sfpm = surfaceSpeed(operation, material);
             console.log(sfpm);
 
-            var hssLow = sfpm.hss[0];
-            var hssHigh = sfpm.hss[1];
-            var carbideLow = sfpm.carbide[0];
-            var carbideHigh = sfpm.carbide[1];
-
-            if (tool == "carbide") {
+            if (tool == "carbide" && operation !== "drilling") {
+                var carbideLow = sfpm.carbide[0];
+                var carbideHigh = sfpm.carbide[1];
                 var rpmRange = RPM(carbideLow, carbideHigh, diameter);
                 var rpmLow = rpmRange.rpmLow;
                 var rpmHigh = rpmRange.rpmHigh;
             } else if (tool == "hss") {
+                var hssLow = sfpm.hss[0];
+                var hssHigh = sfpm.hss[1];
                 var rpmRange = RPM(hssLow, hssHigh, diameter);
                 var rpmLow = rpmRange.rpmLow;
                 var rpmHigh = rpmRange.rpmHigh;
@@ -197,13 +196,29 @@
             console.log(material);
             console.log(teeth);
             console.log(rpmRange);
-
-            $("#rpmRangeDiv").html("<p>For <strong>" + operationText + "</strong> your <strong>" + materialText + " </strong> material with a <strong>" + toolText + "</strong> tool, we recommend an RPM range of:</p><div class='ui-corner-all custom-corners'><div class='ui-bar ui-bar-a'><h3>RPM Range</h3></div><div class='ui-body ui-body-a'><p><strong>" + rpmLow + "</strong> RPM - <strong>" + rpmHigh + "</strong> RPM</p></div></div><p></p><p>To calculate <strong>Feed Rate</strong> select a specific RPM from the range below.</p>");
-
-            $('#RPMSlider').attr('min', rpmLow);
-            $('#RPMSlider').attr('max', rpmHigh);
-            $('#RPMSlider').attr('value', rpmLow);
-
+            
+            if (operation === "drilling") {
+                var angleLow = sfpm.angle[0];
+                var angleHigh = sfpm.angle[1];
+                
+                if (tool === "carbide") {
+                    $("#rpmRangeDiv").html("<p>Sorry, we have no drilling data for carbide drills at this time :(</p>");
+                    $('#RPMSlider').attr('min', 0);
+                    $('#RPMSlider').attr('max', 0);
+                } else {
+                    $("#rpmRangeDiv").html("<p>For <strong>" + operationText + "</strong> your <strong>" + materialText + " </strong> material with a <strong>" + toolText + "</strong> tool, we recommend an RPM range of:</p><div class='ui-corner-all custom-corners'><div class='ui-bar ui-bar-a'><h3>RPM Range</h3></div><div class='ui-body ui-body-a'><p><strong>" + rpmLow + "</strong> RPM - <strong>" + rpmHigh + "</strong> RPM <br/><br/><em>Tip Angle:</em> <strong>" + angleLow + "</strong><sup>o</sup> - <strong>" + angleHigh + "</strong><sup>o</sup></p></div></div><p></p><p>To calculate <strong>Feed Rate</strong> select a specific RPM from the range below.</p>");
+                    
+                    $('#RPMSlider').attr('min', rpmLow);
+                    $('#RPMSlider').attr('max', rpmHigh);
+                    $('#RPMSlider').attr('value', rpmLow);
+                }
+            } else {
+                $("#rpmRangeDiv").html("<p>For <strong>" + operationText + "</strong> your <strong>" + materialText + " </strong> material with a <strong>" + toolText + "</strong> tool, we recommend an RPM range of:</p><div class='ui-corner-all custom-corners'><div class='ui-bar ui-bar-a'><h3>RPM Range</h3></div><div class='ui-body ui-body-a'><p><strong>" + rpmLow + "</strong> RPM - <strong>" + rpmHigh + "</strong> RPM</p></div></div><p></p><p>To calculate <strong>Feed Rate</strong> select a specific RPM from the range below.</p>");
+                
+                $('#RPMSlider').attr('min', rpmLow);
+                $('#RPMSlider').attr('max', rpmHigh);
+                $('#RPMSlider').attr('value', rpmLow);
+            }
         });
 
         $("#finalResults").click(function() {
