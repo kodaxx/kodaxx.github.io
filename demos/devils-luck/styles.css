@@ -1,0 +1,212 @@
+/* CSS reset { */
+body,
+div,
+h1,
+button,
+p {
+    margin: 0;
+    padding: 0
+}
+
+button {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit
+}
+
+a:active,
+a:focus {
+    outline: 0
+}
+
+/* } */
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.75em;
+    font-weight: normal;
+    color: #bbb;
+    font-family: 'Bungee Spice', sans-serif;
+}
+
+h1,
+a {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
+}
+
+html,
+* {
+    font-family: 'Inter';
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fafafa;
+    line-height: 1.6;
+    background: #ddd url(https://subtlepatterns.com/patterns/texturetastic_gray.png);
+}
+
+.lead {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+#slot {
+    background: rgb(238, 238, 238);
+    /* background: -moz-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(238, 238, 238, 1)), color-stop(100%, rgba(204, 204, 204, 1))); */
+    background: -webkit-linear-gradient(top, rgb(255, 113, 11) 0%, rgb(219, 32, 32) 100%);
+    /* background: -o-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); */
+    background: linear-gradient(top, rgb(179, 18, 18) 0%, rgba(204, 204, 204, 1) 100%);
+    max-width: 400px;
+    margin: 10px auto 20px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#container {
+    position: relative;
+    overflow: hidden;
+    /* border-top: 1px solid #999;
+    border-bottom: 1px solid #999; */
+    margin: 30px auto;
+    max-width: 300px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3) inset, 0 0px 1px rgba(0, 0, 0, .2) inset;
+    background: #fff;
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(246, 246, 246, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(50%, rgba(241, 241, 241, 1)), color-stop(51%, rgba(225, 225, 225, 1)), color-stop(100%, rgba(246, 246, 246, 1)));
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(246, 246, 246, 1) 100%);
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(246, 246, 246, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(246, 246, 246, 1) 100%);
+    background: linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(246, 246, 246, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6', GradientType=0);
+}
+
+
+.btn {
+    text-align: center;
+    font-family: 'Bungee Spice', sans-serif;
+    border-radius: 5px;
+    padding: 5% 10%;
+    border: none;
+    font-size: 1.6em;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    background: rgb(252, 255, 244);
+    background: -moz-linear-gradient(top, rgba(252, 255, 244, 1) 0%, rgba(233, 233, 206, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(252, 255, 244, 1)), color-stop(100%, rgba(233, 233, 206, 1)));
+    background: -webkit-linear-gradient(top, rgb(44, 44, 44) 0%, rgb(20, 20, 20) 100%);
+    background: -o-linear-gradient(top, rgba(252, 255, 244, 1) 0%, rgba(233, 233, 206, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(252, 255, 244, 1) 0%, rgba(233, 233, 206, 1) 100%);
+    background: linear-gradient(top, rgba(252, 255, 244, 1) 0%, rgba(233, 233, 206, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#e9e9ce', GradientType=0);
+}
+
+.btn:active {
+    color: #900;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+    margin: 2px 0 -2px;
+}
+
+.btn-small {
+    text-align: center;
+    font-family: 'Bungee Spice', sans-serif;
+    border: none;
+    font-size: .8em;
+    background: none;
+}
+
+/* .btn {
+    padding: 1.25rem;
+    border: 0;
+    border-radius: 3px;
+    background-color: #4F46E5;
+    color: #fff;
+    cursor: pointer;
+} */
+
+ul.example {
+    position: relative;
+    float: left;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 33.333333%;
+    font-size: 50px;
+    height: 82px;
+    text-align: center;
+}
+
+#first li,
+#second li {
+    border-right: 1px solid #ccc;
+}
+
+/* #first li {
+    border: 1px solid #999;
+    background-color: #fafafa;
+    border-radius: 5px;
+} */
+
+#second,
+#third {
+    float: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.msg {
+    text-align: center;
+    color: #000000;
+    font-size: 1.2em;
+    padding: 20px 0 0;
+    font-family: 'Courier New', Courier, monospace;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .3), 0 1px 0 rgba(255, 255, 255, .5);
+}
+
+#instructions {
+    text-align: center;
+}
+
+#instructionsBtn {
+    padding: 10px;
+    margin: 0 auto;
+    text-align: center;
+    border: solid 1px #c3c3c3;
+    color: #fff;
+    font-size: 1.2em;
+}
+
+#panel {
+    max-width: 800px;
+    padding: 20px;
+    display: none;
+    margin: 10px auto 0;
+    text-align: left;
+    background-color: #ebebeb;
+    border-radius: 10px 10px 0 0;
+}
+
+#instructionList {
+    list-style-type: none;
+    padding: 20px;
+}
+
+#instructionList li,
+#instructionList li strong,
+ol li,
+ol li span {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+ol li {
+    font-size: 15px;
+}

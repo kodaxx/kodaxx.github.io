@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>THE DEVIL'S LUCK 🍀</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+	<h1 class="text-center">the devil's luck 🍀</h1>
+	<div id="slot">
+		<div id="container">
+			<ul id="first" class="example">
+				<li>👈</li>
+				<li>👉</li>
+				<li>💸</li>
+				<li>🤑</li>
+				<li>🤑</li>
+				<li>🍻</li>
+			</ul>
+
+			<ul id="second" class="example">
+				<li>👈</li>
+				<li>👉</li>
+				<li>💸</li>
+				<li>🤑</li>
+				<li>🤑</li>
+				<li>🍻</li>
+			</ul>
+			<ul id="third" class="example">
+				<li>👈</li>
+				<li>👉</li>
+				<li>💸</li>
+				<li>🤑</li>
+				<li>🤑</li>
+				<li>🍻</li>
+			</ul>
+
+			<div style="clear:both"></div>
+
+		</div>
+		<div id="buttons" style="text-align: center;">
+			<button id="start" class="btn">try your luck</button>
+		</div>
+		<!-- <p class="msg">
+			<button id="left" class="btn-small">◀</button>
+			<span class="msg" id="playerName">Player 1</span>
+			<button id="right" class="btn-small">▶</button>
+		</p> -->
+	</div>
+	<div id="instructions">
+		<button class="btn" id="instructionsBtn">how to play</button>
+		<div id="panel">
+			<ul id="instructionList">
+				<li>👈 - pass money to the <strong>left</strong></li>
+				<li>👉 - pass money to the <strong>right</strong></li>
+				<li>🤑 - <strong>keep</strong> money</li>
+				<li>💸 - put money <strong>in the pot</strong></li>
+				<li>🍻 - <strong>drink</strong> or put money <strong>in the pot</strong></li>
+			</ul>
+
+			<ol>
+				<li>Arrange at least three players in a circle</li>
+				<li>Choose a starting buy-in (typically five $1 bills)</li>
+				<li>Spin, then act on as many emojis as you have $1 bills, max of 3
+					<span style="font-size: 15px; color: #ABABAB">(ex. if you only have $2, you will only do the first
+						two actions and ignore the third)</span>
+				</li>
+				<li>If you don’t have any money, skip your turn</li>
+				<li>Even if you can’t spin, you aren’t out of the game until someone wins</li>
+				<li>Play continues until there is one person with money left, and they also win the pot</li>
+			</ol>
+		</div>
+	</div>
+
+
+	</div>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="jquery.bandit.js"></script>
+<script src="game.js"></script>
+<script>
+	$(function () {
+		$('ul.example').bandit({
+			speed: [20, 40, 60],
+			delay: 0,
+			autoStop: [700, 750, 800],
+			startButton: '#start',
+			stopButton: '#stop',
+			spinOnLoad: false,
+			decel: 2,
+			done: function (text) {
+				console.log(text);
+			}
+		});
+	});
+</script>
+
+</html>
