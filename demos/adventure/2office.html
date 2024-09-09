@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.E.C.R.E.T. Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="window">
+                <pre>
+ _____  _____ _____  ______   _____ _____ 
+/  ___||  ___/  __ \ | ___ \ |  ___|_   _|
+\ `--. | |__ | /  \/ | |_/ / | |__   | |  
+ `--. \|  __|| |     |    /  |  __|  | |  
+/\__/ /| |___| \__/\_| |\ \ _| |____ | |_ 
+\____(_)____(_)____(_)_| \_(_)____(_)\_(_)
+                                                </pre>
+                <!-- <div>You have accessed the <span class="red">S.E.C.R.E.T.</span> database, please make sure you have
+                    permission to access this server.</div>
+                <div>&nbsp;</div> -->
+                <span id="greeting" class="green">Welcome back, recruit.</span>
+                <div>&nbsp;</div>
+                <div><span class="red">SYSTEM ALERT:</span></div>
+                <div>&nbsp;</div>
+                <div>Employee schedules compromised. Reconstruct the correct schedule to proceed.</div>
+                <div>&nbsp;</div>
+                <div><span class="yellow">There are four city officials:</span></div>
+                <div>ChoiJiho, AnJisoo, HwangMinho, KimMinseo</div>
+                <div>&nbsp;</div>
+                <div><span class="yellow">They have these positions:</span></div>
+                <div>Mayor, Clerk, Treasurer, and Planner</div>
+                <div>&nbsp;</div>
+                <div><span class="yellow">And there are four different meeting times:</span></div>
+                <div>10:00 AM, 11:30 AM, 2:00 PM, 3:30 PM</div>
+                <div>&nbsp;</div>
+                <div><span class="yellow">This is what our intelligence indicates:</span></div>
+                <div><span class="yellow">1.</span> The Mayor’s meeting is earlier than ChoiJiho’s meeting.</div>
+                <div><span class="yellow">2.</span> HwangMinho is not the Clerk or the Mayor.</div>
+                <div><span class="yellow">3.</span> KimMinseo has a meeting at 11:30 AM.</div>
+                <div><span class="yellow">4.</span> AnJisoo is not the Treasurer.</div>
+                <div><span class="yellow">5.</span> The Planner’s meeting is later in the day than KimMinseo’s meeting.
+                </div>
+                <div><span class="yellow">6.</span> ChoiJiho’s meeting is at 2:00 PM.</div>
+                <div><span class="yellow">7.</span> The Treasurer has the first meeting of the day.</div>
+                <div>&nbsp;</div>
+                <div>Determine each official's meeting time. The codeword is formed by the first letter of
+                    each official's name in order of their meeting times.</div>
+                <div>&nbsp;</div>
+                <div>Enter the <span class="red">codeword</span>, or type <span class="yellow">hint</span> if you need
+                    help</div>
+                <div>&nbsp;</div>
+                <input id="cmdline" class="input" type="text" placeholder="enter a command">
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var Terminal = (function () {
+
+        // Variables
+        var commands = ['help', 'hint', 'hack', 'reset'],
+            history = [],
+            historyIndex = 0,
+            $window = $('.window'),
+            $input = $('.input');
+
+        // Binding
+        $input.on('keydown', handleKeypress);
+
+        // Let's start!
+        // appendNewLine('>');
+        $input.focus();
+
+        // Function that is fired when the user hits a key
+        function handleKeypress(e) {
+            if (e.which === 13) {
+                runGameLogic();
+            } else if (e.which === 38) {
+                commandHistory(-1);
+            } else if (e.which === 40) {
+                commandHistory(1);
+            }
+        }
+
+        // Main game logic
+        async function runGameLogic(string) {
+            var playerInput = $input.val() || string;
+
+            history.push(playerInput);
+            historyIndex = history.length;
+
+            //clear command
+            if (playerInput.toLowerCase() === 'clear') {
+                clearScreen();
+                appendNewLine('<br>');
+                return;
+            }
+
+            appendNewLine(playerInput);
+            $input.val('');
+            playerInput = playerInput.toLowerCase();
+
+            //invalid command
+            if (!validInput(playerInput) && !playerInput.includes('hint')) {
+                appendNewLine('<br>');
+                appendNewLine('<span class="red">command not found:</span> <span>' + playerInput + '</span>');
+                appendNewLine('<br>');
+                return;
+            }
+            //help command
+            if (playerInput === 'help') {
+                appendNewLine('<br>');
+                appendNewLine('You can enter any available system commands or any codeword that you\'ve received');
+                appendNewLine('<br>');
+                appendNewLine('<span class="yellow">available commands:</span> help, hint, clear, reset, [codeword]')
+                appendNewLine('<br>');
+                return;
+            }
+            //hint command
+            if (playerInput.includes('hint')) {
+                appendNewLine('<br>');
+                appendNewLine('<span class="yellow">hint: </span>The trees are beautiful this time of year');
+                appendNewLine('<br>');
+                return;
+            }
+            //reset command
+            if (playerInput.includes('reset')) {
+                location.reload();
+            }
+            //codeword
+            if (playerInput === 'hack') {
+                clearScreen();
+                removeInput();
+                replaceGreeting('Attempting to hack the server...')
+                await sleep(2000);
+                replaceGreeting('Access granted. Municipal firewall breached.');
+                appendNewLine('<br>');
+                appendNewLine('<span class="yellow">Message:</span>')
+                appendNewLine('<span class="yellow">-----------------------------------------</span>');
+                appendNewLine('Impressive work, agent. You\'ve uncovered evidence of financial irregularities.');
+                appendNewLine('<br>');
+                appendNewLine('The trail leads to Waegwan Bridge - a key infrastructure project with suspicious funding.');
+                appendNewLine('<br>');
+                appendNewLine('<span class="red">NEXT TASK:</span>');
+                appendNewLine('Crack the encrypted data stream to reveal the true money flow.');
+                appendNewLine('<br>');
+                appendNewLine('<span class="orange">Remember, bridges connect more than just physical spaces.</span>');
+                appendNewLine('<br>');
+                appendNewLine('You will now be given coordinates to your next mission.');
+                appendNewLine('<br>');
+                appendNewLine('Once you\'re there, use the clue above to find the QR code for that location\'s terminal.');
+                appendNewLine('<br>');
+                appendNewLine('<span class="green"><a href="https://www.google.com/maps/place/35%C2%B059\'44.0%22N+128%C2%B024\'06.1%22E/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d35.995562!4d128.401687?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D" target="_blank">35.995562, 128.401687</a></span>');
+                appendNewLine('<span class="yellow">-----------------------------------------</span>');
+                appendNewLine('<br>');
+                appendNewLine('<br>');
+                appendNewLine('<span class="red">CONNECTION TERMINATED.</span>');
+                return;
+            }
+        }
+
+        // Go through previous commands like a real terminal
+        function commandHistory(number) {
+            if (number < 0) {
+                if (historyIndex >= 0) {
+                    historyIndex += number;
+                }
+            } else {
+                if (historyIndex < history.length) {
+                    historyIndex += number;
+                }
+            }
+            $input.val(history[historyIndex] || '');
+        }
+
+        // Appends a new line to the terminal
+        function appendNewLine(content) {
+            $input.before('<div>' + content + '</div>');
+            $window.scrollTop($window[0].scrollHeight);
+        }
+
+        // Checks if the input is valid
+        function validInput(input) {
+            if (commands.includes(input)) {
+                return true;
+            }
+            return false;
+        }
+
+
+        // Clears the terminal
+        function clearScreen() {
+            $('.window > div').remove();
+            $input.val('');
+        }
+
+        function replaceGreeting(string) {
+            $('#greeting').text(string);
+        }
+
+        function removeInput() {
+            // $('#cmdline').remove();
+            $input.attr('disabled', 'disabled');
+            $input.removeAttr('placeholder');
+        }
+
+        const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
+        // Public methods
+        return {
+            insert: runGameLogic,
+            clear: clearScreen
+        };
+
+    })();
+</script>
+
+</html>

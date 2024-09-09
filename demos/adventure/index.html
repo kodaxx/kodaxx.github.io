@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.E.C.R.E.T. Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="window">
+                <pre>
+ _____  _____ _____  ______   _____ _____ 
+/  ___||  ___/  __ \ | ___ \ |  ___|_   _|
+\ `--. | |__ | /  \/ | |_/ / | |__   | |  
+ `--. \|  __|| |     |    /  |  __|  | |  
+/\__/ /| |___| \__/\_| |\ \ _| |____ | |_ 
+\____(_)____(_)____(_)_| \_(_)____(_)\_(_)
+                                                </pre>
+                <span id="greeting" class="green">Welcome, potential recruit.</span>
+                <div>&nbsp;</div>
+                <div><span class="yellow">Message:</span></div>
+                <div><span class="yellow">-----------------------------------------</span></div>
+                <div>Are you ready to go on a journey through Waegwan?</div>
+                <div>&nbsp;</div>
+                <div><span class="green">YOUR MISSION</span></div>
+                <div>&nbsp;</div>
+                <div>As a rookie hacker recruited by a mysterious organization, your task is to infiltrate a corrupt
+                    network that has its tendrils deep within Waegwan. Through a series of challenging stages,
+                    you'll uncover evidence, crack codes, and reveal the story.</div>
+                <div>&nbsp;</div>
+                <div><span class="green">HOW IT WORKS</span></div>
+                <div>&nbsp;</div>
+                <div>1. You will go to different spots in Waegwan and use your smartphone to scan QR codes, unlocking
+                    the puzzles.</div>
+                <div>&nbsp;</div>
+                <div>2. You will start with simpler challenges and work your way up to more complex
+                    puzzles. Feel free to use google.</div>
+                <div>&nbsp;</div>
+                <div>4. Solve each puzzle to obtain a codeword. Enter it into the terminal to receive coordinates for
+                    your next destination.</div>
+                <div>&nbsp;</div>
+                <div>Your journey starts at the CAC Center Library.</div>
+                <div>&nbsp;</div>
+                <div><span class="yellow">-----------------------------------------</span></div>
+                <div>&nbsp;</div>
+                <div>To begin, type <span class="green"><a href="./library.html">begin</a></span> and press enter.</div>
+                <div>&nbsp;</div>
+                <input id="cmdline" class="input" type="text" placeholder="enter a command">
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var Terminal = (function () {
+
+        // Variables
+        var commands = ['help', 'begin', 'reset'],
+            history = [],
+            historyIndex = 0,
+            $window = $('.window'),
+            $input = $('.input');
+
+        // Binding
+        $input.on('keydown', handleKeypress);
+
+        // Let's start!
+        // appendNewLine('>');
+        $input.focus();
+
+        // Function that is fired when the user hits a key
+        function handleKeypress(e) {
+            if (e.which === 13) {
+                runGameLogic();
+            } else if (e.which === 38) {
+                commandHistory(-1);
+            } else if (e.which === 40) {
+                commandHistory(1);
+            }
+        }
+
+        // Main game logic
+        async function runGameLogic(string) {
+            var playerInput = $input.val() || string;
+
+            history.push(playerInput);
+            historyIndex = history.length;
+
+            //clear command
+            if (playerInput.toLowerCase() === 'clear') {
+                clearScreen();
+                appendNewLine('<br>');
+                return;
+            }
+
+            appendNewLine(playerInput);
+            $input.val('');
+            playerInput = playerInput.toLowerCase();
+
+            //invalid command
+            if (!validInput(playerInput) && !playerInput.includes('hint')) {
+                appendNewLine('<br>');
+                appendNewLine('<span class="red">command not found:</span> <span>' + playerInput + '</span>');
+                appendNewLine('<br>');
+                return;
+            }
+            //help command
+            if (playerInput === 'help') {
+                appendNewLine('<br>');
+                appendNewLine('You can enter any available system commands or any codeword that you\'ve received');
+                appendNewLine('<br>');
+                appendNewLine('<span class="yellow">available commands:</span> help, hint, clear, reset, [codeword]')
+                appendNewLine('<br>');
+                return;
+            }
+            //reset command
+            if (playerInput.includes('reset')) {
+                location.reload();
+            }
+            //codeword
+            if (playerInput === 'begin') {
+                clearScreen();
+                removeInput();
+                replaceGreeting('Establishing connection...')
+                await sleep(2000);
+                //fix this
+                window.location = `./1library.html`;
+                return;
+            }
+        }
+
+        // Go through previous commands like a real terminal
+        function commandHistory(number) {
+            if (number < 0) {
+                if (historyIndex >= 0) {
+                    historyIndex += number;
+                }
+            } else {
+                if (historyIndex < history.length) {
+                    historyIndex += number;
+                }
+            }
+            $input.val(history[historyIndex] || '');
+        }
+
+        // Appends a new line to the terminal
+        function appendNewLine(content) {
+            $input.before('<div>' + content + '</div>');
+            $window.scrollTop($window[0].scrollHeight);
+        }
+
+        // Checks if the input is valid
+        function validInput(input) {
+            if (commands.includes(input)) {
+                return true;
+            }
+            return false;
+        }
+
+
+        // Clears the terminal
+        function clearScreen() {
+            $('.window > div').remove();
+            $input.val('');
+        }
+
+        function replaceGreeting(string) {
+            $('#greeting').text(string);
+        }
+
+        function removeInput() {
+            // $('#cmdline').remove();
+            $input.attr('disabled', 'disabled');
+            $input.removeAttr('placeholder');
+        }
+
+        const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
+        // Public methods
+        return {
+            insert: runGameLogic,
+            clear: clearScreen
+        };
+
+    })();
+</script>
+
+</html>
