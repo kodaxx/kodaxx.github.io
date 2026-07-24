@@ -79,6 +79,8 @@ select{font-family:'Nunito';font-weight:900;font-size:18px;padding:10px;border-r
 .maptoggle{font-size:13px;font-weight:700;display:flex;gap:8px;align-items:center;justify-content:center;color:var(--sky)}
 .maptoggle input{width:16px;height:16px;accent-color:var(--sun)}
 .padfocus{outline:3px solid var(--sun) !important;outline-offset:3px;border-radius:6px}
+.padedit{outline:3px solid var(--grass) !important;outline-offset:3px;animation:editpulse 1s infinite}
+@keyframes editpulse{50%{outline-color:rgba(128,237,153,.35)}}
 #touchUI{position:absolute;inset:0;pointer-events:none;z-index:7;touch-action:none;-webkit-user-select:none;user-select:none}
 #touchUI>*{pointer-events:auto;touch-action:none}
 .tstick{position:absolute;bottom:24px;left:24px;width:124px;height:124px;border-radius:50%;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.22)}
@@ -202,7 +204,7 @@ html,body{overscroll-behavior:none}
     </div>
     <button class="big hot" id="btnControls">CONTROLS</button>
   </div>
-  <div class="hint">3D arena chaos with a side-scrolling soul. Grab whatever gun the sky drops, one hit ends a bird, last bantam standing takes the round. Online play is peer-to-peer — host shares a 4-letter coop code.</div>
+  <div class="hint">Grab whatever the sky drops. One hit ends a bird. Last bantam standing takes the round.<br>Host a coop with a 4-letter code, or settle it in a tournament.</div>
 </div>
 
 <div id="setupMenu" class="screen hidden">
@@ -266,6 +268,7 @@ html,body{overscroll-behavior:none}
     Gear (hard hat · yolk vest · cloud engine · moon spurs) equips on grab — armor eats one hit, jetpack flies while you hold jump<br>
     <b>Controller</b>: stick/dpad move · <b>A</b> jump · <b>X</b>/<b>RT</b> fire · <b>B</b>/<b>RB</b> grab · <b>Y</b> squawk · right stick aims · <b>Start</b> menu<br>
     In menus: dpad/stick moves the highlight · <b>A</b> picks (cycles dropdowns) · <b>B</b> goes back<br>
+    Name fields, arcade style: <b>A</b> to edit · up/down spins the letter · left/right moves · <b>B</b> done<br>
     <b>Touch</b>: left stick moves (push up = jump, down = crouch/slam) · right stick aims &amp; fires · GRAB/JUMP/SQK buttons · ≡ for menu
   </div>
   <button class="big" id="btnControlsBack">BACK</button>
@@ -582,6 +585,7 @@ function navItems(scr){
   return Array.from(scr.querySelectorAll('button:not(.arr),select,input,.modecard,.mchip,.stepper')).filter(e=>!e.disabled&&e.offsetParent!==null);
 }
 function setFocus(e){
+  if(PadNav.edit)editExit();
   if(PadNav.el)PadNav.el.classList.remove('padfocus');
   PadNav.el=e; if(e)e.classList.add('padfocus');
 }
@@ -606,11 +610,53 @@ function navStep(dx,dy){
   if(e&&e.classList&&e.classList.contains('stepper')&&dx!==0){ stepperCycle(e.id,dx); return; }
   navMove(dx,dy);
 }
+const PAD_CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ';
+function padCharsFor(e){ return e.id==='joinCode'?'ABCDEFGHIJKLMNOPQRSTUVWXYZ':PAD_CHARS; }
+function editShow(){
+  const ed=PadNav.edit; if(!ed)return;
+  try{ ed.el.focus(); ed.el.setSelectionRange(ed.pos,ed.pos+1); }catch(err){}
+}
+function editFire(e){ try{ e.dispatchEvent(new Event('input',{bubbles:true})); }catch(err){} }
+function editEnter(e){
+  PadNav.edit={el:e,pos:Math.max(0,(e.value||'').length-1)};
+  if(!e.value){ e.value=padCharsFor(e)[0]; PadNav.edit.pos=0; editFire(e); }
+  if(e.classList)e.classList.add('padedit');
+  editShow();
+}
+function editExit(){
+  const ed=PadNav.edit; if(!ed)return;
+  if(ed.el.classList)ed.el.classList.remove('padedit');
+  try{ ed.el.blur(); }catch(err){}
+  PadNav.edit=null;
+}
+function editCycle(d){ // up/down: spin the letter under the cursor
+  const ed=PadNav.edit; if(!ed)return;
+  const chars=padCharsFor(ed.el), v=ed.el.value||'';
+  const cur=v[ed.pos]||chars[0];
+  let i=chars.indexOf(cur.toUpperCase()); if(i<0)i=0;
+  const nc=chars[((i+d)%chars.length+chars.length)%chars.length];
+  ed.el.value=v.slice(0,ed.pos)+nc+v.slice(ed.pos+1);
+  editFire(ed.el); editShow();
+}
+function editMove(d){ // left/right: previous / next letter slot
+  const ed=PadNav.edit; if(!ed)return;
+  const maxLen=parseInt(ed.el.maxLength,10)>0?parseInt(ed.el.maxLength,10):16;
+  if(d>0){
+    if(ed.pos<(ed.el.value||'').length-1)ed.pos++;
+    else if((ed.el.value||'').length<maxLen){ ed.el.value=(ed.el.value||'')+padCharsFor(ed.el)[0]; ed.pos=ed.el.value.length-1; editFire(ed.el); }
+  } else if(ed.pos>0){
+    // backing off a trailing placeholder trims it
+    if(ed.pos===(ed.el.value||'').length-1&&ed.el.value[ed.pos]===padCharsFor(ed.el)[0]&&ed.el.value.length>1){
+      ed.el.value=ed.el.value.slice(0,-1); editFire(ed.el); }
+    ed.pos=Math.min(ed.pos-1,(ed.el.value||'').length-1);
+  }
+  editShow();
+}
 function navActivate(){
   const e=PadNav.el; if(!e){ navMove(0,1); return; }
   if(e.classList&&e.classList.contains('stepper')){ stepperCycle(e.id,1); return; }
   if(e.tagName==='SELECT'){ const n=e.options.length; e.selectedIndex=(e.selectedIndex+1)%n; }
-  else if(e.tagName==='INPUT'&&e.type==='text'){ e.focus(); }
+  else if(e.tagName==='INPUT'&&(e.type==='text'||!e.type)){ editEnter(e); }
   else e.click();
 }
 function navBack(){
@@ -626,14 +672,15 @@ function padMenuTick(){
   const dx=(ax(0)>.5||b(15))?1:(ax(0)<-.5||b(14))?-1:0;
   const dy=(ax(1)>.5||b(13))?1:(ax(1)<-.5||b(12))?-1:0;
   const t=now();
+  const step=(sx,sy)=>{ if(PadNav.edit){ if(sy)editCycle(-sy); else if(sx)editMove(sx); } else navStep(sx,sy); };
   if(dx||dy){
     const key=dx+','+dy;
-    if(PadNav.holdKey!==key){ PadNav.holdKey=key; PadNav.nextRep=t+340; audioBoot(); navStep(dx,dy); }
-    else if(t>=PadNav.nextRep){ PadNav.nextRep=t+140; navStep(dx,dy); }
+    if(PadNav.holdKey!==key){ PadNav.holdKey=key; PadNav.nextRep=t+340; audioBoot(); step(dx,dy); }
+    else if(t>=PadNav.nextRep){ PadNav.nextRep=t+140; step(dx,dy); }
   } else PadNav.holdKey=null;
-  if(b(0)&&!PadNav.prev.a){ audioBoot(); navActivate(); }
-  if(b(1)&&!PadNav.prev.b)navBack();
-  if(b(9)&&!PadNav.prev.st)Game.escapePressed();
+  if(b(0)&&!PadNav.prev.a){ audioBoot(); if(PadNav.edit)editExit(); else navActivate(); }
+  if(b(1)&&!PadNav.prev.b){ if(PadNav.edit)editExit(); else navBack(); }
+  if(b(9)&&!PadNav.prev.st){ if(PadNav.edit)editExit(); else Game.escapePressed(); }
   PadNav.prev={a:b(0),b:b(1),st:b(9)};
 }
 function padOnlyInput(){ // player 2 rides the gamepad
@@ -2452,7 +2499,7 @@ const Game={
     if(Net.peer){ try{Net.peer.destroy()}catch(e){} }
     Net.peer=null; Net.conns=[]; Net.hostConn=null; Net.mode='local'; Net.lastSnap=Net.prevSnap=null;
     viewReset(); View.levelIdx=-1;
-    ['controlsMenu','joinMenu','lobbyMenu','matchOver'].forEach(hide); show('mainMenu');
+    ['controlsMenu','joinMenu','lobbyMenu','matchOver','setupMenu','tourMenu','tourBracket'].forEach(hide); show('mainMenu');
     el('roomCodeHud').style.display='none'; el('netStatus').textContent='';
     el('scoreStrip').innerHTML=''; el('ammoBox').style.display='none';
   },
