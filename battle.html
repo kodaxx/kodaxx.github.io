@@ -456,8 +456,13 @@ function touchNub(kind){
 }
 function touchBtn(name,down){ Touch.btn[name]=down; }
 function touchSetup(){
-  Touch.enabled=('ontouchstart' in window)||((navigator.maxTouchPoints||0)>0);
-  if(!Touch.enabled)return;
+  const detected=('ontouchstart' in window)||((navigator.maxTouchPoints||0)>0);
+  if(detected)touchEnable();
+  else window.addEventListener('touchstart',()=>touchEnable(),{once:true,passive:true});
+}
+function touchEnable(){
+  if(Touch.enabled)return;
+  Touch.enabled=true;
   for(const kind of ['move','aim']){
     const e=el(kind==='move'?'tMove':'tAim');
     e.addEventListener('touchstart',ev=>{ev.preventDefault();audioBoot();touchApply(kind,'start',ev.changedTouches);},{passive:false});
@@ -2270,7 +2275,6 @@ function edSave(){
   saveMaps(); Ed.dirty=false;
   edStatus(issues.length? 'Saved with warnings: '+issues[0] : 'Saved! "'+Ed.map.name+'" joins the rotation.');
   Game.refreshMapCount();
-touchSetup();
   return true;
 }
 function edCycleTheme(){
@@ -2563,6 +2567,7 @@ el('edBackB').onclick=()=>exitEditor(true);
 el('edIOClose').onclick=()=>{ hide('edIO'); };
 el('edIOLoad').onclick=()=>edImport();
 Game.refreshMapCount();
+touchSetup();
 
 /* ---------- boot ---------- */
 initThree();
